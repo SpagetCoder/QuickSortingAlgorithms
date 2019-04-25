@@ -167,6 +167,79 @@ void quicksortWithInsertion(vector<int>& data, int left, int right)
 	}
 }
 
+int shellSortBonus(vector<int>& data)
+{
+	for (int gap = data.size() / 2; gap > 0; gap /= 2)
+	{
+		for (int i = gap; i < data.size(); i++)
+		{
+			int temp = data[i];
+
+			int j;
+			for (j = i; j >= gap && data[j - gap] > temp; j -= gap)
+				data[j] = data[j - gap];
+
+			data[j] = temp;
+		}
+	}
+	return 0;
+}
+
+int shellSort1(vector<int>& data)
+{
+	double h = 1;
+	int x, j;
+
+	while (h < (data.size() / 9.0))
+	{
+		h = 3 * h + 1;
+	}
+	while (h > 0)
+	{
+		for (int i = h; i < data.size(); i++)
+		{
+			x = data[i];
+			j = i;
+			while (j >= h && x < data[j - h]) {
+				data[j] = data[j - h];
+				j = j - h;
+			}
+			data[j] = x;
+		}
+		h = round(h / 3.0);
+	}
+	return 0;
+}
+
+int shellSort2(vector<int>& data)
+{
+
+	double h = 1;
+	int x, j;
+	while (h < (data.size() / 2.0))
+	{
+		h = 2 * h + 1;
+	}
+	while (h > 0)
+	{
+		for (int i = h; i < data.size(); i++)
+		{
+			x = data[i];
+			j = i;
+			while (j >= h && x < data[j - h])
+			{
+				data[j] = data[j - h];
+				j = j - h;
+			}
+			data[j] = x;
+		}
+		h = round(h / 3.0);
+	}
+
+	return 0;
+}
+
+
 
 void check_if_sorted(vector<int>& data)
 {
@@ -213,7 +286,6 @@ int main(int argc, char *argv[])
 	cout << "quicksort sort time " << elapsed.count() << endl;
 	check_if_sorted(data2);
 
-
 	start = chrono::high_resolution_clock::now();
 	data2 = data;
 	quicksortWithRandomPivot(data2, 0, data2.size());
@@ -236,6 +308,32 @@ int main(int argc, char *argv[])
 	finish = chrono::high_resolution_clock::now();
 	elapsed = finish - start;
 	cout << "quicksort sort with insertion " << elapsed.count() << endl;
+	check_if_sorted(data2);
+
+
+	start = chrono::high_resolution_clock::now();
+	data2 = data;
+	shellSort1(data2);
+	finish = chrono::high_resolution_clock::now();
+	elapsed = finish - start;
+	cout << "shell sort  " << elapsed.count() << endl;
+	check_if_sorted(data2);
+
+	start = chrono::high_resolution_clock::now();
+	data2 = data;
+	shellSort2(data2);
+	finish = chrono::high_resolution_clock::now();
+	elapsed = finish - start;
+	cout << "shell sort  " << elapsed.count() << endl;
+	check_if_sorted(data2);
+
+
+	start = chrono::high_resolution_clock::now();
+	data2 = data;
+	shellSortBonus(data2);
+	finish = chrono::high_resolution_clock::now();
+	elapsed = finish - start;
+	cout << "shell sort bonus  " << elapsed.count() << endl;
 	check_if_sorted(data2);
 
 	system("pause");
