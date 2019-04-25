@@ -8,6 +8,53 @@
 
 using namespace std;
 
+int partition(vector<int>&data, int low, int high)
+{
+	int pivot = data[high]; // pivot 
+	int i = (low - 1); // Index of smaller element 
+
+	for (int j = low; j <= high - 1; j++) {
+
+		// If current element is smaller than or 
+		// equal to pivot 
+		if (data[j] <= pivot) {
+
+			i++; // increment index of smaller element 
+			swap(data[i], data[j]);
+		}
+	}
+	swap(data[i + 1], data[high]);
+	return (i + 1);
+}
+
+int partition_r(vector<int>&data, int low, int high)
+{
+	// Generate a random number in between 
+	// low .. high 
+	srand(time(NULL));
+	int random = low + rand() % (high - low);
+
+	// Swap A[random] with A[high] 
+	swap(data[random], data[high]);
+
+	return partition(data, low, high);
+}
+
+void quicksortWithRandomPivot(vector<int>& data, int left, int right)
+{
+	int pivot, s;
+
+	srand(time(NULL));
+
+	if (left < right)
+	{
+		pivot = partition_r(data, left, right);
+
+
+		quicksortWithRandomPivot(data, left, pivot-1);
+		quicksortWithRandomPivot(data, pivot + 1, right);
+	}
+}
 
 void quicksort(vector<int>& data, int left, int right)
 {
@@ -74,12 +121,23 @@ int main(int argc, char *argv[])
 
 	data2 = data;
 	quicksort(data2, 0, data2.size());
-
 	auto finish = chrono::high_resolution_clock::now();
 	chrono::duration<double> elapsed = finish - start;
 	cout << "quicksort sort time " << elapsed.count() << endl;
 
 	check_if_sorted(data2);
+
+
+	start = chrono::high_resolution_clock::now();
+
+	data2 = data;
+	quicksortWithRandomPivot(data2, 0, data2.size());
+	finish = chrono::high_resolution_clock::now();
+	elapsed = finish - start;
+	cout << "quicksort sort with random pivot time " << elapsed.count() << endl;
+
+	check_if_sorted(data2);
+
 
 	system("pause");
 
